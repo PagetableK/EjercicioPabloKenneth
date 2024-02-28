@@ -87,81 +87,142 @@ INSERT INTO detalles_pedidos VALUES(UUID(), '3f8a60c7-d656-11ee-8955-a4bb6dda87b
 --		*INSERTE ID DEL PRODUCTO*
 'c02031b6-d652-11ee-8955-a4bb6dda87ba', 2, 100.00, 200.00);
 
--- Procedimiento almacenado
+-- ----------------------------------------------- --
+-- PROCEDIMIENTOS ALMACENADOS --
+
+-- Procedimiento para tabla Clientes
+CREATE PROCEDURE insertar_clientes(
+    IN nombre VARCHAR(36),
+    IN apellido VARCHAR(50),
+    IN telefono VARCHAR(50),
+    IN direccion VARCHAR(250)
+)
+INSERT INTO clientes VALUES (UUID(), nombre, apellido, telefono, direccion);
+
+-- Procedimiento para tabla Empleados
+CREATE PROCEDURE insertar_empleados(
+    IN nombre VARCHAR(50),
+    IN apellido VARCHAR(50),
+    IN cargo VARCHAR(50),
+    IN fecha_contratacion DATE,
+    IN salario DECIMAL(10,2)
+)
+INSERT INTO empleados VALUES (UUID(), nombre, apellido, cargo, fecha_contratacion, salario);
+
+-- Procedimiento para tabla Pedidos
+CREATE PROCEDURE insertar_pedidos(
+    IN cliente_id  VARCHAR(36),
+    IN fecha_pedido DATE,
+    IN total DECIMAL(10,2),   
+    IN empleado_id VARCHAR(36)
+)
+INSERT INTO pedidos (pedido_id , cliente_id, fecha_pedido, total, empleado_id) VALUES (UUID(), cliente_id, fecha_pedido, total, empleado_id);
+
+-- Procedimiento para tabla Productos
+CREATE PROCEDURE insertar_productos(
+    IN nombre VARCHAR(100),
+    IN descripcion VARCHAR(500),
+    IN precio DECIMAL(10,2),
+    IN existencias INT
+)
+INSERT INTO productos VALUES (UUID(), nombre, descripcion, precio, existencias);
+
+-- Procedimiento para tabla Detalle de Pedido
+CREATE PROCEDURE insertar_detalle_pedido(
+    IN pedido_id VARCHAR(36),
+    IN producto_id VARCHAR(36),
+    IN cantidad INT,
+    IN precio_unitario DECIMAL(10,2),
+    IN subtotal DECIMAL(10,2)
+)
+INSERT INTO detalles_pedidos VALUES (UUID(), pedido_id, producto_id, cantidad, precio_unitario, subtotal);
+
+-- ----------------------------------------------------------------------------
 
 
--- Insertar valores en la tabla clientes los 15 por tabla
--- Insertar valores en la tabla cliente
-DELIMITER $$
-CREATE PROCEDURE insertar_clientes_multiples()
-BEGIN
-    DECLARE i INT DEFAULT 1;
-    WHILE i <= 15 DO
-        INSERT INTO clientes VALUES(UUID(), CONCAT('Cliente', i), CONCAT('Apellido', i), CONCAT('1234567', i), CONCAT('Dirección', i));
-        SET i = i + 1;
-    END WHILE;
-END$$
-DELIMITER ;
-CALL insertar_clientes_multiples();
+-- INSERTS -------------------------------
 
--- Insertar valores en la tabla empleados
-DELIMITER $$
-CREATE PROCEDURE insertar_empleados_multiples()
-BEGIN
-    DECLARE i INT DEFAULT 1;
-    WHILE i <= 15 DO
-        INSERT INTO empleados VALUES(UUID(), CONCAT('Empleado', i), CONCAT('Apellido', i), CONCAT('Cargo', i), '2022-01-01', 1000);
-        SET i = i + 1;
-    END WHILE;
-END$$
-DELIMITER ;
-CALL insertar_empleados_multiples();
+-- clientes --
+Call insertar_clientes('John', 'Doe', '555-1234', '123 Main St');
+Call insertar_clientes('Jane', 'Smith', '555-5678', '456 Elm St');
+Call insertar_clientes('Michael', 'Johnson', '555-9876', '789 Oak St');
+Call insertar_clientes('Emily', 'Brown', '555-4321', '321 Pine St');
+Call insertar_clientes('David', 'Martinez', '555-8765', '654 Maple St');
+Call insertar_clientes('Sarah', 'Garcia', '555-2468', '987 Cedar St');
+Call insertar_clientes('Matthew', 'Lopez', '555-1357', '753 Birch St');
+Call insertar_clientes('Jessica', 'Perez', '555-3698', '369 Walnut St');
+Call insertar_clientes('Christopher', 'Rodriguez', '555-7854', '852 Cherry St');
+Call insertar_clientes('Amanda', 'Gonzalez', '555-2143', '143 Sycamore St');
+Call insertar_clientes('James', 'Hernandez', '555-5789', '789 Willow St');
+Call insertar_clientes('Ashley', 'Torres', '555-9632', '632 Hickory St');
+Call insertar_clientes('Daniel', 'Flores', '555-7410', '410 Ash St');
+Call insertar_clientes('Alexis', 'Ramirez', '555-8023', '023 Poplar St');
+Call insertar_clientes('Megan', 'Nguyen', '555-5087', '087 Pineapple St');
 
--- Insertar valores en la tabla pedidos
-DELIMITER $$
-CREATE PROCEDURE insertar_pedidos_multiples()
-BEGIN
-    DECLARE i INT DEFAULT 1;
-    WHILE i <= 15 DO
-        INSERT INTO pedidos VALUES(UUID(), (SELECT cliente_id FROM clientes ORDER BY RAND() LIMIT 1), '2024-02-28', 100.00 * i, 'Enviando', (SELECT empleado_id FROM empleados ORDER BY RAND() LIMIT 1));
-        SET i = i + 1;
-    END WHILE;
-END$$
-DELIMITER ;
-CALL insertar_pedidos_multiples();
+-- empleados --
+Call insertar_empleados('John', 'Doe', 'Manager', '2023-01-15', 55000.00);
+Call insertar_empleados('Jane', 'Smith', 'Sales Associate', '2023-02-28', 42000.00);
+Call insertar_empleados('Michael', 'Johnson', 'Software Engineer', '2023-03-10', 65000.00);
+Call insertar_empleados('Emily', 'Brown', 'Accountant', '2023-04-05', 50000.00);
+Call insertar_empleados('David', 'Martinez', 'Marketing Specialist', '2023-05-20', 48000.00);
+Call insertar_empleados('Sarah', 'Garcia', 'Human Resources Coordinator', '2023-06-08', 45000.00);
+Call insertar_empleados('Matthew', 'Lopez', 'Project Manager', '2023-07-17', 60000.00);
+Call insertar_empleados('Jessica', 'Perez', 'Graphic Designer', '2023-08-25', 48000.00);
+Call insertar_empleados('Christopher', 'Rodriguez', 'Customer Service Representative', '2023-09-12', 40000.00);
+Call insertar_empleados('Amanda', 'Gonzalez', 'Financial Analyst', '2023-10-30', 55000.00);
+Call insertar_empleados('James', 'Hernandez', 'Quality Assurance Tester', '2023-11-19', 52000.00);
+Call insertar_empleados('Ashley', 'Torres', 'Operations Manager', '2023-12-03', 62000.00);
+Call insertar_empleados('Daniel', 'Flores', 'IT Support Specialist', '2024-01-08', 48000.00);
+Call insertar_empleados('Alexis', 'Ramirez', 'Administrative Assistant', '2024-02-14', 42000.00);
+Call insertar_empleados('Megan', 'Nguyen', 'Data Analyst', '2024-03-22', 53000.00);
 
--- Insertar valores en la tabla productos
-DELIMITER $$
-CREATE PROCEDURE insertar_productos_multiples()
-BEGIN
-    DECLARE i INT DEFAULT 1;
-    WHILE i <= 15 DO
-        INSERT INTO productos VALUES(UUID(), CONCAT('Producto', i), CONCAT('Descripción', i), 10.00 * i, 50);
-        SET i = i + 1;
-    END WHILE;
-END$$
-DELIMITER ;
-CALL insertar_productos_multiples();
+-- pedidos --
+Call insertar_pedidos('10214a1e-d68b-11ee-85a7-18473dc6fc0c','2024-01-01', 150.00,'101f0f64-d68b-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c30737f-d68c-11ee-85a7-18473dc6fc0c','2024-01-02', 200.50,'84a52c59-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c326c8e-d68c-11ee-85a7-18473dc6fc0c','2024-01-03', 75.25,'84a6daed-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c335b03-d68c-11ee-85a7-18473dc6fc0c','2024-01-04', 300.00,'84a77921-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c34721e-d68c-11ee-85a7-18473dc6fc0c','2024-01-05', 125.75,'84a814fa-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c3500cd-d68c-11ee-85a7-18473dc6fc0c','2024-01-06', 450.80,'84a8b2fa-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c35cd97-d68c-11ee-85a7-18473dc6fc0c','2024-01-07', 175.60,'84a959a2-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c3678a9-d68c-11ee-85a7-18473dc6fc0c','2024-01-08', 350.25,'84aa05ca-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c371096-d68c-11ee-85a7-18473dc6fc0c','2024-01-09', 100.00,'84aaaa93-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c37ae17-d68c-11ee-85a7-18473dc6fc0c','2024-01-10', 275.50,'84ab41c5-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c384c35-d68c-11ee-85a7-18473dc6fc0c','2024-01-11', 400.75,'84abdece-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c38f1b7-d68c-11ee-85a7-18473dc6fc0c','2024-01-12', 150.25,'84ac87b7-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c397b78-d68c-11ee-85a7-18473dc6fc0c','2024-01-13', 225.30,'84ad2fe9-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c3a17a6-d68c-11ee-85a7-18473dc6fc0c','2024-01-14', 180.50,'84adce11-d68c-11ee-85a7-18473dc6fc0c');
+Call insertar_pedidos('1c3aad30-d68c-11ee-85a7-18473dc6fc0c','2024-01-15', 500.00,'84ae63a3-d68c-11ee-85a7-18473dc6fc0c');
 
--- Insertar valores en la tabla detalle pedidos
-DELIMITER $$
-CREATE PROCEDURE insertar_detalles_pedidos_multiples()
-BEGIN
-    DECLARE i INT DEFAULT 1;
-    WHILE i <= 15 DO
-        INSERT INTO detalles_pedidos VALUES(UUID(), (SELECT pedido_id FROM pedidos ORDER BY RAND() LIMIT 1), (SELECT producto_id FROM productos ORDER BY RAND() LIMIT 1), i, 10.00 * i, 100.00 * i);
-        SET i = i + 1;
-    END WHILE;
-END$$
-DELIMITER ;
-CALL insertar_detalles_pedidos_multiples();
+-- productos --
+Call insertar_productos('Laptop', '15-inch laptop with SSD storage', 999.99, 20);
+Call insertar_productos('Smartphone', 'High-end smartphone with dual cameras', 699.99, 50);
+Call insertar_productos('Wireless Headphones', 'Over-ear headphones with noise cancellation', 149.99, 30);
+Call insertar_productos('Tablet', '10-inch tablet with touchscreen display', 299.99, 40);
+Call insertar_productos('Smart Watch', 'Fitness tracker with heart rate monitoring', 199.99, 25);
+Call insertar_productos('Bluetooth Speaker', 'Portable speaker with built-in microphone', 79.99, 35);
+Call insertar_productos('Gaming Console', 'Next-gen gaming console with 4K support', 499.99, 15);
+Call insertar_productos('External Hard Drive', '2TB external hard drive for backups', 129.99, 10);
+Call insertar_productos('Digital Camera', 'Mirrorless camera with interchangeable lenses', 899.99, 8);
+Call insertar_productos('Wireless Mouse', 'Ergonomic mouse with customizable buttons', 49.99, 20);
+Call insertar_productos('Fitness Tracker', 'Waterproof fitness tracker with GPS', 129.99, 30);
+Call insertar_productos('Printer', 'Wireless all-in-one printer with scanning', 199.99, 12);
+Call insertar_productos('Portable Charger', '10000mAh portable charger with fast charging', 39.99, 25);
+Call insertar_productos('Wireless Keyboard', 'Slim wireless keyboard with numeric keypad', 59.99, 18);
+Call insertar_productos('Smart Thermostat', 'Programmable thermostat with app control', 149.99, 22);
 
-
-
-SELECT * FROM clientes;
-SELECT * FROM empleados;
-SELECT * FROM pedidos;
-SELECT * FROM productos;
-SELECT * FROM detalles_pedidos;
-
- 
+-- detalles_pedidos --
+Call insertar_detalle_pedido('b9f0d3e4-d68d-11ee-85a7-18473dc6fc0c','bb1522f3-d68f-11ee-85a7-18473dc6fc0c',2, 25.00, 50.00);
+Call insertar_detalle_pedido('b9f25896-d68d-11ee-85a7-18473dc6fc0c','bb0c04e6-d68f-11ee-85a7-18473dc6fc0c',3, 15.99, 47.97);
+Call insertar_detalle_pedido('b9f32e91-d68d-11ee-85a7-18473dc6fc0c','bb0d0dce-d68f-11ee-85a7-18473dc6fc0c',1, 99.99, 99.99);
+Call insertar_detalle_pedido('b9f4095f-d68d-11ee-85a7-18473dc6fc0c','bb0dd2ac-d68f-11ee-85a7-18473dc6fc0c',5, 10.50, 52.50);
+Call insertar_detalle_pedido('b9f4b3ef-d68d-11ee-85a7-18473dc6fc0c','bb0e7c91-d68f-11ee-85a7-18473dc6fc0c',2, 49.95, 99.90);
+Call insertar_detalle_pedido('b9f5425e-d68d-11ee-85a7-18473dc6fc0c','bb0f0ede-d68f-11ee-85a7-18473dc6fc0c',4, 7.25, 29.00);
+Call insertar_detalle_pedido('b9f5d94b-d68d-11ee-85a7-18473dc6fc0c','bb0fa4e4-d68f-11ee-85a7-18473dc6fc0c',1, 199.00, 199.00);
+Call insertar_detalle_pedido('b9f67898-d68d-11ee-85a7-18473dc6fc0c','bb10361e-d68f-11ee-85a7-18473dc6fc0c',3, 5.75, 17.25);
+Call insertar_detalle_pedido('b9f71dbd-d68d-11ee-85a7-18473dc6fc0c','bb10fc11-d68f-11ee-85a7-18473dc6fc0c',2, 39.99, 79.98);
+CALL insertar_detalle_pedido('b9f7a734-d68d-11ee-85a7-18473dc6fc0c','bb118941-d68f-11ee-85a7-18473dc6fc0c',1, 149.50, 149.50);
+Call insertar_detalle_pedido('b9f83340-d68d-11ee-85a7-18473dc6fc0c','bb121f94-d68f-11ee-85a7-18473dc6fc0c',3, 12.75, 38.25);
+Call insertar_detalle_pedido('b9f923b8-d68d-11ee-85a7-18473dc6fc0c','bb12b381-d68f-11ee-85a7-18473dc6fc0c',2, 89.99, 179.98);
+Call insertar_detalle_pedido('b9f9e41d-d68d-11ee-85a7-18473dc6fc0c','bb135fbf-d68f-11ee-85a7-18473dc6fc0c',4, 6.50, 26.00);
+Call insertar_detalle_pedido('b9fa800e-d68d-11ee-85a7-18473dc6fc0c','bb13f7b3-d68f-11ee-85a7-18473dc6fc0c',1, 199.99, 199.99);
+Call insertar_detalle_pedido('b9fb194f-d68d-11ee-85a7-18473dc6fc0c','bb1488b1-d68f-11ee-85a7-18473dc6fc0c',2, 59.95, 119.90);
