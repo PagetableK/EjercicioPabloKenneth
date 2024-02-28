@@ -91,7 +91,7 @@ INSERT INTO detalles_pedidos VALUES(UUID(), '3f8a60c7-d656-11ee-8955-a4bb6dda87b
 
 
 -- Insertar valores en la tabla clientes los 15 por tabla
--- Insert multiple values into clientes table
+-- Insertar valores en la tabla cliente
 DELIMITER $$
 CREATE PROCEDURE insertar_clientes_multiples()
 BEGIN
@@ -104,7 +104,7 @@ END$$
 DELIMITER ;
 CALL insertar_clientes_multiples();
 
--- Insert multiple values into empleados table
+-- Insertar valores en la tabla empleados
 DELIMITER $$
 CREATE PROCEDURE insertar_empleados_multiples()
 BEGIN
@@ -117,7 +117,7 @@ END$$
 DELIMITER ;
 CALL insertar_empleados_multiples();
 
--- Insert multiple values into pedidos table
+-- Insertar valores en la tabla pedidos
 DELIMITER $$
 CREATE PROCEDURE insertar_pedidos_multiples()
 BEGIN
@@ -130,7 +130,7 @@ END$$
 DELIMITER ;
 CALL insertar_pedidos_multiples();
 
--- Insert multiple values into productos table
+-- Insertar valores en la tabla productos
 DELIMITER $$
 CREATE PROCEDURE insertar_productos_multiples()
 BEGIN
@@ -143,7 +143,7 @@ END$$
 DELIMITER ;
 CALL insertar_productos_multiples();
 
--- Insert multiple values into detalles_pedidos table
+-- Insertar valores en la tabla detalle pedidos
 DELIMITER $$
 CREATE PROCEDURE insertar_detalles_pedidos_multiples()
 BEGIN
