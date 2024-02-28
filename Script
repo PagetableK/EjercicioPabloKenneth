@@ -43,7 +43,6 @@ CREATE TABLE productos(
 	existencias INT
 );
 
-
 CREATE TABLE detalles_pedidos(
 	detalle_id VARCHAR(36) PRIMARY KEY,
 	pedido_id VARCHAR(36),
@@ -56,3 +55,28 @@ CREATE TABLE detalles_pedidos(
 	FOREIGN KEY (producto_id)
 	REFERENCES productos(producto_id)
 );
+
+-- TRIGGER QUE DISMINUYE LA CANTIDAD DE PRODUCTOS
+-- CUANDO SE EJECUTA 1 INSERT EN detalles_pedidos
+
+CREATE TRIGGER disminuir_existencia 
+AFTER INSERT ON detalles_pedidos
+FOR EACH ROW
+UPDATE productos
+SET existencias = existencias - NEW.cantidad
+WHERE producto_id = NEW.producto_id;
+
+-- INSERTS NECESARIOS PARA EJECUTAR EL TRIGGER
+
+INSERT INTO empleados VALUES(UUID(), 'Kenneth', 'Ramos', 'Jefe', '2022-01-01', 1000);
+INSERT INTO productos VALUES(UUID(), 'Licuadora', 'Licuadora chiva de 1000W', 100.00, 5);
+
+-- 											 		*INSERTE ID DEL CLIENTE*
+INSERT INTO pedidos VALUES(UUID(), '38b2b820-d64e-11ee-8955-a4bb6dda87ba', '2020-05-04', 200.00, 
+--						*INSERTE ID DEL EMPLEADO*
+'Enviando', '5015a6fd-d64f-11ee-8955-a4bb6dda87ba');
+
+--																*INSERTE ID DEL PEDIDO*
+INSERT INTO detalles_pedidos VALUES(UUID(), '1a6084c2-d650-11ee-8955-a4bb6dda87ba', 
+--		*INSERTE ID DEL PRODUCTO*
+'cdadaca3-d64f-11ee-8955-a4bb6dda87ba', 2, 100.00, 200.00);
