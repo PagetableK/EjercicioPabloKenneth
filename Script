@@ -89,73 +89,79 @@ INSERT INTO detalles_pedidos VALUES(UUID(), '3f8a60c7-d656-11ee-8955-a4bb6dda87b
 
 -- Procedimiento almacenado
 
--- Insertar tabla Cliente
-CREATE PROCEDURE InsertarClientes(
-    IN nombre VARCHAR(36),
-    IN apellido VARCHAR(50),
-    IN telefono VARCHAR(50),
-    IN direccion VARCHAR(250)
-)
+
+-- Insertar valores en la tabla clientes los 15 por tabla
+-- Insert multiple values into clientes table
+DELIMITER $$
+CREATE PROCEDURE insertar_clientes_multiples()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    WHILE i <= 15 DO
+        INSERT INTO clientes VALUES(UUID(), CONCAT('Cliente', i), CONCAT('Apellido', i), CONCAT('1234567', i), CONCAT('Dirección', i));
+        SET i = i + 1;
+    END WHILE;
+END$$
+DELIMITER ;
+CALL insertar_clientes_multiples();
+
+-- Insert multiple values into empleados table
+DELIMITER $$
+CREATE PROCEDURE insertar_empleados_multiples()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    WHILE i <= 15 DO
+        INSERT INTO empleados VALUES(UUID(), CONCAT('Empleado', i), CONCAT('Apellido', i), CONCAT('Cargo', i), '2022-01-01', 1000);
+        SET i = i + 1;
+    END WHILE;
+END$$
+DELIMITER ;
+CALL insertar_empleados_multiples();
+
+-- Insert multiple values into pedidos table
+DELIMITER $$
+CREATE PROCEDURE insertar_pedidos_multiples()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    WHILE i <= 15 DO
+        INSERT INTO pedidos VALUES(UUID(), (SELECT cliente_id FROM clientes ORDER BY RAND() LIMIT 1), '2024-02-28', 100.00 * i, 'Enviando', (SELECT empleado_id FROM empleados ORDER BY RAND() LIMIT 1));
+        SET i = i + 1;
+    END WHILE;
+END$$
+DELIMITER ;
+CALL insertar_pedidos_multiples();
+
+-- Insert multiple values into productos table
+DELIMITER $$
+CREATE PROCEDURE insertar_productos_multiples()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    WHILE i <= 15 DO
+        INSERT INTO productos VALUES(UUID(), CONCAT('Producto', i), CONCAT('Descripción', i), 10.00 * i, 50);
+        SET i = i + 1;
+    END WHILE;
+END$$
+DELIMITER ;
+CALL insertar_productos_multiples();
+
+-- Insert multiple values into detalles_pedidos table
+DELIMITER $$
+CREATE PROCEDURE insertar_detalles_pedidos_multiples()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    WHILE i <= 15 DO
+        INSERT INTO detalles_pedidos VALUES(UUID(), (SELECT pedido_id FROM pedidos ORDER BY RAND() LIMIT 1), (SELECT producto_id FROM productos ORDER BY RAND() LIMIT 1), i, 10.00 * i, 100.00 * i);
+        SET i = i + 1;
+    END WHILE;
+END$$
+DELIMITER ;
+CALL insertar_detalles_pedidos_multiples();
 
 
-    INSERT INTO clientes VALUES (UUID(), nombre, apellido, telefono, direccion);
-
-
--- Insertar tabla Empleados
-CREATE PROCEDURE InsertarEmpleados(
-    IN nombre VARCHAR(50),
-    IN apellido VARCHAR(50),
-    IN cargo VARCHAR(50),
-    IN fecha_contratacion DATE,
-    IN salario DECIMAL(10,2)
-)
-INSERT INTO empleados VALUES (UUID(), nombre, apellido, cargo, fecha_contratacion, salario);
-
-
--- Insertar tabla Pedidos
-CREATE PROCEDURE InsertarPedidos(
-    IN cliente_id  VARCHAR(36),
-    IN fecha_pedido DATE,
-    IN total DECIMAL(10,2),   
-    IN empleado_id VARCHAR(36)
-)
-
-    INSERT INTO pedidos (pedido_id , cliente_id, fecha_pedido, total, empleado_id) VALUES (UUID(), cliente_id, fecha_pedido, total, empleado_id);
-
-DROP PROCEDURE InsertarPedidos;
-
-    -- Insertar tabla Productos
-CREATE PROCEDURE InsertarProductos(
-    IN nombre VARCHAR(100),
-    IN descripcion VARCHAR(500),
-    IN precio DECIMAL(10,2),
-    IN existencias INT
-)
-
-    INSERT INTO productos VALUES (UUID(), nombre, descripcion, precio, existencias);
-
-
-    -- Insertar tabla Productos
-CREATE PROCEDURE InsertarDetallePedido(
-    IN pedido_id VARCHAR(36),
-    IN producto_id VARCHAR(36),
-    IN cantidad INT,
-    IN precio_unitario DECIMAL(10,2),
-    IN subtotal DECIMAL(10,2)
-)
-
-INSERT INTO detalles_pedidos VALUES (UUID(), nombre, descripcion, precio, existencias);
-
-
-
-CALL InsertarClientes('Pablo', 'Escobar', '8767-2442', 'Colombia medellin')
-CALL InsertarEmpleados('Elmer', 'Rosales', 'Administrador', '2006-02-22', 366)
-
-CALL InsertarPedidos('f2c13e47-d663-11ee-919f-7486e2204e75', '2009-12-05', 340.25, 'f5b34482-d663-11ee-919f-7486e2204e75')
-
-CALL InsertarProductos('Pablo', 'Escobar', '8767-2442', 'Colombia medellin')
-CALL InsertarDetallePedido('Pablo', 'Escobar', '8767-2442', 'Colombia medellin')
 
 SELECT * FROM clientes;
 SELECT * FROM empleados;
 SELECT * FROM pedidos;
+SELECT * FROM productos;
+SELECT * FROM detalles_pedidos;
+
+ 
