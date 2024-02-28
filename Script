@@ -1,1 +1,58 @@
 #SCRIPT DE LA DB
+DROP DATABASE IF EXISTS QuickBite;
+
+CREATE DATABASE QuickBite;
+
+USE QuickBite;
+
+CREATE TABLE clientes(
+	cliente_id VARCHAR(36) PRIMARY KEY,
+	nombre VARCHAR(50),
+	apellido VARCHAR(50),
+	telefono VARCHAR(10),
+	direccion VARCHAR(255)
+);
+
+CREATE TABLE empleados(
+	empleado_id VARCHAR(36) PRIMARY KEY,
+	nombre VARCHAR(50),
+	apellido VARCHAR(50),
+	cargo VARCHAR(50),
+	fecha_contratacion DATE,
+	salario DECIMAL(10,2)
+);
+
+CREATE TABLE pedidos(
+	pedido_id VARCHAR(36) PRIMARY KEY,
+	cliente_id VARCHAR(36),
+	fecha_pedido DATE,
+	total DECIMAL(10,2),
+	estado VARCHAR(20),
+	empleado_id VARCHAR(36),
+	FOREIGN KEY (cliente_id)
+	REFERENCES clientes(cliente_id),
+	FOREIGN KEY (empleado_id)
+	REFERENCES empleados(empleado_id)
+);
+
+CREATE TABLE productos(
+	producto_id VARCHAR(36) PRIMARY KEY,
+	nombre VARCHAR(100),
+	descripcion VARCHAR(500),
+	precio DECIMAL(10,2),
+	existencias INT
+);
+
+
+CREATE TABLE detalles_pedidos(
+	detalle_id VARCHAR(36) PRIMARY KEY,
+	pedido_id VARCHAR(36),
+	producto_id VARCHAR(36),
+	cantidad INT,
+	precio_unitario DECIMAL(10,2),
+	subtotal DECIMAL(10,2),
+	FOREIGN KEY (pedido_id)
+	REFERENCES pedidos(pedido_id),
+	FOREIGN KEY (producto_id)
+	REFERENCES productos(producto_id)
+);
