@@ -7,28 +7,29 @@ USE QuickBite;
 
 CREATE TABLE clientes(
 	cliente_id VARCHAR(36) PRIMARY KEY,
-	nombre VARCHAR(50),
-	apellido VARCHAR(50),
-	telefono VARCHAR(10),
-	direccion VARCHAR(255)
+	nombre VARCHAR(50) NOT NULL,
+	apellido VARCHAR(50) NOT NULL,
+	telefono VARCHAR(10) UNIQUE,
+	direccion VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE empleados(
 	empleado_id VARCHAR(36) PRIMARY KEY,
-	nombre VARCHAR(50),
-	apellido VARCHAR(50),
-	cargo VARCHAR(50),
-	fecha_contratacion DATE,
-	salario DECIMAL(10,2)
+	nombre VARCHAR(50) NOT NULL,
+	apellido VARCHAR(50) NOT NULL,
+	cargo VARCHAR(50) NOT NULL,
+	fecha_contratacion DATE NOT NULL,
+	salario DECIMAL(10,2),
+	CHECK(salario >= 365)
 );
 
 CREATE TABLE pedidos(
 	pedido_id VARCHAR(36) PRIMARY KEY,
-	cliente_id VARCHAR(36),
-	fecha_pedido DATE,
-	total DECIMAL(10,2),
-	estado VARCHAR(20),
-	empleado_id VARCHAR(36),
+	cliente_id VARCHAR(36) NOT NULL,
+	fecha_pedido DATE NOT NULL,
+	total DECIMAL(10,2) NOT NULL,
+	estado ENUM('Enviando, Enviado, Cancelado') NOT NULL,
+	empleado_id VARCHAR(36) NOT NULL,
 	FOREIGN KEY (cliente_id)
 	REFERENCES clientes(cliente_id),
 	FOREIGN KEY (empleado_id)
@@ -37,19 +38,21 @@ CREATE TABLE pedidos(
 
 CREATE TABLE productos(
 	producto_id VARCHAR(36) PRIMARY KEY,
-	nombre VARCHAR(100),
-	descripcion VARCHAR(500),
-	precio DECIMAL(10,2),
-	existencias INT
+	nombre VARCHAR(100) NOT NULL,
+	descripcion VARCHAR(500) NOT NULL,
+	precio DECIMAL(10,2) NOT NULL,
+	CHECK(precio >= 1),
+	existencias INT NOT NULL,
+	CHECK(existencias>=0)
 );
 
 CREATE TABLE detalles_pedidos(
 	detalle_id VARCHAR(36) PRIMARY KEY,
-	pedido_id VARCHAR(36),
-	producto_id VARCHAR(36),
-	cantidad INT,
-	precio_unitario DECIMAL(10,2),
-	subtotal DECIMAL(10,2),
+	pedido_id VARCHAR(36) NOT NULL,
+	producto_id VARCHAR(36) NOT NULL,
+	cantidad INT NOT NULL,
+	precio_unitario DECIMAL(10,2) NOT NULL,
+	subtotal DECIMAL(10,2) NOT NULL,
 	FOREIGN KEY (pedido_id)
 	REFERENCES pedidos(pedido_id),
 	FOREIGN KEY (producto_id)
@@ -66,17 +69,20 @@ UPDATE productos
 SET existencias = existencias - NEW.cantidad
 WHERE producto_id = NEW.producto_id;
 
+
+
 -- INSERTS NECESARIOS PARA EJECUTAR EL TRIGGER
 
 INSERT INTO empleados VALUES(UUID(), 'Kenneth', 'Ramos', 'Jefe', '2022-01-01', 1000);
 INSERT INTO productos VALUES(UUID(), 'Licuadora', 'Licuadora chiva de 1000W', 100.00, 5);
+INSERT INTO clientes VALUES(UUID(), 'Pablo', 'Sánchez', '12345678', 'Av. Calle');
 
 -- 											 		*INSERTE ID DEL CLIENTE*
-INSERT INTO pedidos VALUES(UUID(), '38b2b820-d64e-11ee-8955-a4bb6dda87ba', '2020-05-04', 200.00, 
+INSERT INTO pedidos VALUES(UUID(), '2792ec60-d656-11ee-8955-a4bb6dda87ba', '2020-05-04', 200.00, 
 --						*INSERTE ID DEL EMPLEADO*
-'Enviando', '5015a6fd-d64f-11ee-8955-a4bb6dda87ba');
+'Enviando', 'c01fba02-d652-11ee-8955-a4bb6dda87ba');
 
 --																*INSERTE ID DEL PEDIDO*
-INSERT INTO detalles_pedidos VALUES(UUID(), '1a6084c2-d650-11ee-8955-a4bb6dda87ba', 
+INSERT INTO detalles_pedidos VALUES(UUID(), '3f8a60c7-d656-11ee-8955-a4bb6dda87ba', 
 --		*INSERTE ID DEL PRODUCTO*
-'cdadaca3-d64f-11ee-8955-a4bb6dda87ba', 2, 100.00, 200.00);
+'c02031b6-d652-11ee-8955-a4bb6dda87ba', 2, 100.00, 200.00);
