@@ -86,3 +86,67 @@ INSERT INTO pedidos VALUES(UUID(), '2792ec60-d656-11ee-8955-a4bb6dda87ba', '2020
 INSERT INTO detalles_pedidos VALUES(UUID(), '3f8a60c7-d656-11ee-8955-a4bb6dda87ba', 
 --		*INSERTE ID DEL PRODUCTO*
 'c02031b6-d652-11ee-8955-a4bb6dda87ba', 2, 100.00, 200.00);
+
+-- Procedimiento almacenado
+DELIMITER //
+-- Insertar tabla Cliente
+CREATE PROCEDURE InsertarClientes(
+    IN nombre VARCHAR(36),
+    IN apellido VARCHAR(50),
+    IN telefono VARCHAR(50),
+    IN direccion VARCHAR(250)
+)
+BEGIN
+
+    INSERT INTO clientes VALUES (UUID(), nombre, apellido, telefono, direccion);
+
+END //
+-- Insertar tabla Empleados
+CREATE PROCEDURE InsertarEmpleados(
+    IN nombre VARCHAR(50),
+    IN apellido VARCHAR(50),
+    IN cargo VARCHAR(50),
+    IN fecha_contratacion DATE,
+    IN salario DECIMAL(10,2)
+)
+INSERT INTO empleados VALUES (UUID(), nombre, apellido, cargo, fecha_contratacion, salario);
+
+
+-- Insertar tabla Pedidos
+CREATE PROCEDURE InsertarPedidos(
+    IN cliente_id  VARCHAR(36),
+    IN fecha_pedido DATE,
+    IN estado VARCHAR(10),
+    IN total DECIMAL(10,2),   
+    IN empleado_id VARCHAR(36)
+)
+
+    INSERT INTO pedidos (pedido_id , cliente_id, fecha_pedido, total, estado, empleado_id) VALUES (UUID(), cliente_id, fecha_pedido, total, estado, empleado_id);
+
+
+
+    -- Insertar tabla Productos
+CREATE PROCEDURE InsertarProductos(
+    IN nombre VARCHAR(100),
+    IN descripcion VARCHAR(500),
+    IN precio DECIMAL(10,2),
+    IN existencias INT
+)
+
+    INSERT INTO productos VALUES (UUID(), nombre, descripcion, precio, existencias);
+
+
+    -- Insertar tabla Productos
+CREATE PROCEDURE InsertarDetallePedido(
+    IN pedido_id VARCHAR(36),
+    IN producto_id VARCHAR(36),
+    IN cantidad INT,
+    IN precio_unitario DECIMAL(10,2),
+    IN subtotal DECIMAL(10,2)
+)
+
+    INSERT INTO detalles_pedidos VALUES (UUID(), nombre, descripcion, precio, existencias);
+
+
+DELIMITER ;
+CALL InsertarClientes('Pablo', 'Escobar', '8767-2442', 'Colombia medellin')
